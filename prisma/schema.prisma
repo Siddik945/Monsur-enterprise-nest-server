@@ -1,8 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Get a free hosted Postgres database in seconds: `npx create-db`
-
 generator client {
   provider = "prisma-client"
   output   = "../generated/prisma"
@@ -13,13 +8,131 @@ datasource db {
 }
 
 model User {
-  id    Int     @id @default(autoincrement())
-  email String  @unique
-  name  String?
+  id       Int    @id @default(autoincrement())
+  name     String @db.VarChar(255)
+  email    String @db.VarChar(255)
+  password String @db.VarChar(255)
+
+  @@map("user")
+}
+
+model Company {
+  id             Int              @id @default(autoincrement())
+  name           String           @db.VarChar(255)
+  address        String           @db.VarChar(500)
+  email          String           @db.VarChar(255)
+  contact        String           @db.VarChar(255)
+  payments       Payment[]
+  sites          Site[]
+  contracts      Contract[]
+  productDetails ProductDetails[]
+
+  @@map("company")
+}
+
+model Site {
+  id             Int              @id @default(autoincrement())
+  companyId      Int              @map("company_id")
+  name           String           @db.VarChar(255)
+  address        String           @db.VarChar(500)
+  engrName       String           @map("engr_name") @db.VarChar(255)
+  engrContact    String           @map("engr_contact") @db.VarChar(100)
+  orders         Order[]
+  productDetails ProductDetails[]
+  company        Company          @relation(fields: [companyId], references: [id])
+  contracts      Contract[]
+
+  @@map("site")
+}
+
+model ProductCategory {
+  id             Int              @id @default(autoincrement())
+  name           String           @db.VarChar(255)
+  description    String?
+  orders         Order[]
+  contracts      Contract[]
+  productDetails ProductDetails[]
+
+  @@map("product_categories")
 }
 
 model Order {
-  id       Int    @id @default(autoincrement())
-  product  String
-  price    Float
+  id             Int              @id @default(autoincrement())
+  siteId         Int              @map("site_id")
+  categoriesId   Int              @map("categories_id")
+  status         String           @db.VarChar(100)
+  date           DateTime         @db.Date
+  category       ProductCategory  @relation(fields: [categoriesId], references: [id])
+  site           Site             @relation(fields: [siteId], references: [id])
+  productDetails ProductDetails[]
+
+  @@map("orders")
+}
+
+model ProductDetails {
+  id Int @id @default(autoincrement())
+
+  orderId      Int @map("order_id")
+  companyId    Int @map("company_id")
+  siteId       Int @map("site_id")
+  categoriesId Int @map("categories_id")
+  contractId   Int @map("contract_id")
+
+  date              DateTime @db.Date
+  challanNo         String   @map("challa_no") @db.VarChar(255)
+  buyingQuantity    Float    @map("buying_quantity")
+  buyingPricePerCft Float    @map("buying_price_per_cft")
+  rentCost          Float    @default(0) @map("rentCost")
+  labourCost        Float    @map("labour_cost")
+  otherCost         Float    @map("other_cost")
+  sellingQuantity   Float    @map("selling_quantity")
+  status            String   @db.VarChar(100)
+  totalPrice        Float    @map("total_price")
+  totalCost         Float    @map("total_cost")
+  profit            Float
+
+  order    Order           @relation(fields: [orderId], references: [id])
+  company  Company         @relation(fields: [companyId], references: [id])
+  site     Site            @relation(fields: [siteId], references: [id])
+  category ProductCategory @relation(fields: [categoriesId], references: [id])
+  contract Contract        @relation(fields: [contractId], references: [id])
+
+  @@map("product_details")
+}
+
+model Contract {
+  id                  Int      @id @default(autoincrement())
+  date                DateTime @db.Date
+  companyId           Int      @map("company_id")
+  siteId              Int      @map("site_id")
+  productCategoriesId Int      @map("product_categories_id")
+  rate                Int
+
+  productDetails ProductDetails[]
+
+  company         Company         @relation(fields: [companyId], references: [id])
+  site            Site            @relation(fields: [siteId], references: [id])
+  productCategory ProductCategory @relation(fields: [productCategoriesId], references: [id])
+
+  @@map("contract")
+}
+
+model Method {
+  id       Int       @id @default(autoincrement())
+  name     String    @db.VarChar(100)
+  payments Payment[]
+
+  @@map("method")
+}
+
+model Payment {
+  id        Int      @id @default(autoincrement())
+  companyId Int      @map("company_id")
+  methodId  Int      @map("method_id")
+  date      DateTime @db.Date
+  amount    Float
+  company   Company  @relation(fields: [companyId], references: [id])
+  method    Method   @relation(fields: [methodId], references: [id])
+
+  @@map("payment")
 }

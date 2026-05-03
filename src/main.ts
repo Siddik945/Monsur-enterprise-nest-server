@@ -6,13 +6,14 @@ import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  app.enableCors();
 
   app.useGlobalFilters(new AllExceptionFilter());
   app.useGlobalInterceptors(new ResponseInterceptor());
 
   // ✅ Swagger Config
   const config = new DocumentBuilder()
-    .setTitle('My API')
+    .setTitle('Monsur Enterprise API')
     .setDescription('API documentation for my NestJS project')
     .setVersion('1.0')
     .addBearerAuth() // 🔐 for JWT (important later)
