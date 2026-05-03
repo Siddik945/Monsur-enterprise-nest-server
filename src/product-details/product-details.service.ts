@@ -174,16 +174,44 @@ export class ProductDetailService {
     return this.prisma.productDetails.delete({ where: { id } });
   }
 
-  async getSummaryByOrder(orderId: number) {
+  async getSummaryByCompany(companyId: number) {
     const details = await this.prisma.productDetails.findMany({
-      where: { orderId },
+      where: { companyId },
+      include: {
+        company: true,
+        order: true,
+      },
     });
     return {
-      orderId,
-      totalRevenue: details.reduce((s, d) => s + d.totalPrice, 0),
+      companyId,
+      companyName: details[0]?.company?.name || 'Unknown',
+      totalPrice: details.reduce((s, d) => s + d.totalPrice, 0),
       totalCost: details.reduce((s, d) => s + d.totalCost, 0),
       totalProfit: details.reduce((s, d) => s + d.profit, 0),
       itemCount: details.length,
     };
+  }
+
+  async getAllCompaniesSummary() {
+    const companies = await this.prisma.company.findMany({
+      include: {
+        productDetails: {
+          select: {
+            totalPrice: true,
+            totalCost: true,
+            profit: true,
+          },
+        },
+      },
+    });
+
+    return companies.map((company) => ({
+      companyId: company.id,
+      companyName: company.name,
+      totalPrice: company.productDetails.reduce((s, d) => s + d.totalPrice, 0),
+      totalCost: company.productDetails.reduce((s, d) => s + d.totalCost, 0),
+      totalProfit: company.productDetails.reduce((s, d) => s + d.profit, 0),
+      itemCount: company.productDetails.length,
+    }));
   }
 }

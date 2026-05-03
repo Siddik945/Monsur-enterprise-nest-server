@@ -36,11 +36,11 @@ export class ProductDetailController {
     return this.productDetailService.findByOrder(orderId);
   }
 
-  @Get('order/:orderId/summary')
-  @ApiOperation({ summary: 'Get profit summary for an order' })
-  getSummary(@Param('orderId', ParseIntPipe) orderId: number) {
-    return this.productDetailService.getSummaryByOrder(orderId);
-  }
+  // @Get('order/:orderId/summary')
+  // @ApiOperation({ summary: 'Get profit summary for an order' })
+  // getSummary(@Param('orderId', ParseIntPipe) orderId: number) {
+  //   return this.productDetailService.getSummaryByOrder(orderId);
+  // }
 
   @Get(':id')
   @ApiOperation({ summary: 'Get a selling detail by ID' })
@@ -67,5 +67,17 @@ export class ProductDetailController {
   @ApiOperation({ summary: 'Delete a selling detail' })
   remove(@Param('id', ParseIntPipe) id: number) {
     return this.productDetailService.remove(id);
+  }
+
+  @Get('company/:companyId/summary')
+  @ApiOperation({ summary: 'Get profit summary for a company' })
+  getCompanySummary(@Param('companyId', ParseIntPipe) companyId: number) {
+    return this.productDetailService.getSummaryByCompany(companyId);
+  }
+
+  @Get('allCompany/summary')
+  @ApiOperation({ summary: 'Get profit summary for all companies' })
+  getAllCompaniesSummary() {
+    return this.productDetailService.getAllCompaniesSummary();
   }
 }

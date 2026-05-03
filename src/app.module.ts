@@ -9,7 +9,7 @@ import { OrderModule } from './order/order.module';
 import { ProductDetailsModule } from './product-details/product-details.module';
 import { ProductCategoryModule } from './product-category/product-category.module';
 import { MethodModule } from './method/method.module';
-// import { PaymentModule } from './payment/payment.module';
+import { PaymentModule } from './payment/payment.module';
 import { ContractModule } from './contract/contract.module';
 
 @Module({
@@ -24,7 +24,7 @@ import { ContractModule } from './contract/contract.module';
     ProductDetailsModule,
     ProductCategoryModule,
     MethodModule,
-    // PaymentModule,
+    PaymentModule,
     ContractModule,
   ],
   controllers: [AppController],
