@@ -19,7 +19,61 @@ export class ProductDetailService {
     });
   }
 
-  // clientFindAll() {}
+  findSellingReport(startDate?: string, endDate?: string) {
+    const where: any = {};
+
+    if (startDate || endDate) {
+      where.date = {};
+
+      if (startDate) {
+        where.date.gte = new Date(startDate);
+      }
+
+      if (endDate) {
+        where.date.lte = new Date(endDate);
+      }
+    }
+
+    return this.prisma.productDetails.findMany({
+      where,
+      include: {
+        company: true,
+        site: true,
+        category: true,
+        contract: true,
+        order: true,
+      },
+    });
+  }
+
+  findByCompany(companyId: number, startDate?: string, endDate?: string) {
+    const where: any = {
+      companyId: companyId,
+    };
+
+    if (startDate || endDate) {
+      where.date = {};
+
+      if (startDate) {
+        where.date.gte = new Date(startDate);
+      }
+
+      if (endDate) {
+        where.date.lte = new Date(endDate);
+      }
+    }
+
+    return this.prisma.productDetails.findMany({
+      where,
+      include: {
+        company: true,
+        site: true,
+        category: true,
+        contract: true,
+        order: true,
+      },
+    });
+  }
 
   findByOrder(orderId: number) {
     return this.prisma.productDetails.findMany({

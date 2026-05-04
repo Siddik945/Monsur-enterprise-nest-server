@@ -7,8 +7,9 @@ import {
   Param,
   Body,
   ParseIntPipe,
+  Query,
 } from '@nestjs/common';
-import { ApiTags, ApiOperation } from '@nestjs/swagger';
+import { ApiTags, ApiOperation, ApiQuery } from '@nestjs/swagger';
 import { CreateProductDetailDto } from './dto/create-product-detail.dto';
 import { UpdateProductDetailDto } from './dto/update-product-detail.dto';
 import { ProductDetailService } from './product-details.service';
@@ -24,11 +25,52 @@ export class ProductDetailController {
     return this.productDetailService.findAll();
   }
 
-  // @Get('clientView')
-  // @ApiOperation({ summary: 'Get all client details' })
-  // clientFindAll() {
-  //   return this.productDetailService.clientFindAll();
-  // }
+  @Get('sellingReport')
+  @ApiOperation({ summary: 'Get all details by company ID' })
+  @ApiQuery({
+    name: 'start_date',
+    required: false,
+    type: String,
+    example: '2026-01-01',
+  })
+  @ApiQuery({
+    name: 'end_date',
+    required: false,
+    type: String,
+    example: '2026-01-31',
+  })
+  findSellingReport(
+    @Query('start_date') startDate?: string,
+    @Query('end_date') endDate?: string,
+  ) {
+    return this.productDetailService.findSellingReport(startDate, endDate);
+  }
+
+  @Get('company/:companyId')
+  @ApiOperation({ summary: 'Get all details by company ID' })
+  @ApiQuery({
+    name: 'start_date',
+    required: false,
+    type: String,
+    example: '2026-01-01',
+  })
+  @ApiQuery({
+    name: 'end_date',
+    required: false,
+    type: String,
+    example: '2026-01-31',
+  })
+  findByCompany(
+    @Param('companyId', ParseIntPipe) companyId: number,
+    @Query('start_date') startDate?: string,
+    @Query('end_date') endDate?: string,
+  ) {
+    return this.productDetailService.findByCompany(
+      companyId,
+      startDate,
+      endDate,
+    );
+  }
 
   @Get('order/:orderId')
   @ApiOperation({ summary: 'Get selling details by order ID' })
