@@ -12,8 +12,11 @@ import { ApiTags, ApiOperation } from '@nestjs/swagger';
 import { MethodService } from './method.service';
 import { CreateMethodDto } from './dto/create-method.dto';
 import { UpdateMethodDto } from './dto/update-method.dto';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { UseGuards } from '@nestjs/common';
 
 @ApiTags('Payment Methods')
+@UseGuards(JwtAuthGuard)
 @Controller('methods')
 export class MethodController {
   constructor(private readonly methodService: MethodService) {}

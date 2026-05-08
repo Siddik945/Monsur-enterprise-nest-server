@@ -11,6 +11,8 @@ import { ProductCategoryModule } from './product-category/product-category.modul
 import { MethodModule } from './method/method.module';
 import { PaymentModule } from './payment/payment.module';
 import { ContractModule } from './contract/contract.module';
+import { AuthModule } from './auth/auth.module';
+import { AdminModule } from './admin/admin.module';
 
 @Module({
   imports: [
@@ -26,6 +28,8 @@ import { ContractModule } from './contract/contract.module';
     MethodModule,
     PaymentModule,
     ContractModule,
+    AuthModule,
+    AdminModule,
   ],
   controllers: [AppController],
   providers: [AppService],

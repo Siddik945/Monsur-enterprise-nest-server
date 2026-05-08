@@ -12,8 +12,11 @@ import { ApiTags, ApiOperation } from '@nestjs/swagger';
 import { ContractService } from './contract.service';
 import { CreateContractDto } from './dto/create-contract.dto';
 import { UpdateContractDto } from './dto/update-contract.dto';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { UseGuards } from '@nestjs/common';
 
 @ApiTags('Contracts')
+@UseGuards(JwtAuthGuard)
 @Controller('contracts')
 export class ContractController {
   constructor(private readonly contractService: ContractService) {}

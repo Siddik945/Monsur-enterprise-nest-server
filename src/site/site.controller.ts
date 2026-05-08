@@ -12,8 +12,11 @@ import { ApiTags, ApiOperation } from '@nestjs/swagger';
 import { SiteService } from './site.service';
 import { CreateSiteDto } from './dto/create-site.dto';
 import { UpdateSiteDto } from './dto/update-site.dto';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { UseGuards } from '@nestjs/common';
 
 @ApiTags('Sites')
+@UseGuards(JwtAuthGuard)
 @Controller('sites')
 export class SiteController {
   constructor(private readonly siteService: SiteService) {}

@@ -13,8 +13,11 @@ import { ApiTags, ApiOperation, ApiQuery } from '@nestjs/swagger';
 import { CreateProductDetailDto } from './dto/create-product-detail.dto';
 import { UpdateProductDetailDto } from './dto/update-product-detail.dto';
 import { ProductDetailService } from './product-details.service';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { UseGuards } from '@nestjs/common';
 
 @ApiTags('Product Details')
+@UseGuards(JwtAuthGuard)
 @Controller('product-details')
 export class ProductDetailController {
   constructor(private readonly productDetailService: ProductDetailService) {}
@@ -77,12 +80,6 @@ export class ProductDetailController {
   findByOrder(@Param('orderId', ParseIntPipe) orderId: number) {
     return this.productDetailService.findByOrder(orderId);
   }
-
-  // @Get('order/:orderId/summary')
-  // @ApiOperation({ summary: 'Get profit summary for an order' })
-  // getSummary(@Param('orderId', ParseIntPipe) orderId: number) {
-  //   return this.productDetailService.getSummaryByOrder(orderId);
-  // }
 
   @Get(':id')
   @ApiOperation({ summary: 'Get a selling detail by ID' })
